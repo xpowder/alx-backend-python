@@ -12,7 +12,7 @@ def connect_db():
         con = MySQLdb.connect(
             host="localhost",
             user="root",
-            passwd="Anas@063199",
+            passwd="",
             port=3306,
         ) 
         return con
@@ -38,7 +38,7 @@ def connect_to_prodev():
         connection = MySQLdb.connect(
             host="localhost",
             user="root",
-            passwd="Anas@063199",
+            passwd="",
             db="ALX_prodev",
             port=3306
         )
