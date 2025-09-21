@@ -1,4 +1,4 @@
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, permissions, filters, status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 
@@ -16,6 +16,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         conversation = serializer.save()
         conversation.participants.add(self.request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -32,3 +33,4 @@ class MessageViewSet(viewsets.ModelViewSet):
         conversation_id = self.kwargs.get('conversation_pk')
         conversation = get_object_or_404(Conversation, pk=conversation_id)
         serializer.save(sender=self.request.user, conversation=conversation)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
