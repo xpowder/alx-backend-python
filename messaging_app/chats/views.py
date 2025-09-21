@@ -1,27 +1,28 @@
-from rest_framework import viewsets, permissions, filters
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-from .models import Conversation, Message, User
+from .models import Conversation, Message
 from .serializers import ConversationSerializer, MessageSerializer
+
+
+
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all().prefetch_related('participants', 'messages__sender')
     serializer_class = ConversationSerializer
     permission_classes = [permissions.AllowAny]
-    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
-    search_fields = ['participants__first_name', 'participants__last_name']
-    ordering_fields = ['created_at']
 
-    def perform_create(self, serializer):
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         conversation = serializer.save()
-        conversation.participants.add(self.request.user)
+        conversation.participants.add(request.user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED) 
 
 
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [permissions.AllowAny]
-    filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['sent_at']
 
     def get_queryset(self):
         conversation_id = self.kwargs.get('conversation_pk')
