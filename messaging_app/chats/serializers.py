@@ -9,6 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['user_id', 'first_name', 'last_name', 'email', 'role']
 
 class MessageSerializer(serializers.ModelSerializer):
+    content = serializers.CharField()
     sender = UserSerializer(read_only=True)
 
     class Meta:
@@ -32,3 +33,4 @@ class ConversationSerializer(serializers.ModelSerializer):
             from rest_framework.exceptions import ValidationError
             raise ValidationError("You must be logged in to create a conversation.")
         return data
+
