@@ -16,6 +16,11 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = ['message_id', 'sender', 'message_body', 'sent_at']
 
+    def validate_content(self, value):
+        if not value.strip():
+            raise serializers.ValidationError("Message content cannot be empty.")
+        return value
+
 class ConversationSerializer(serializers.ModelSerializer):
     participants = UserSerializer(many=True, read_only=True)
     messages = serializers.SerializerMethodField() 
@@ -33,4 +38,5 @@ class ConversationSerializer(serializers.ModelSerializer):
             from rest_framework.exceptions import ValidationError
             raise ValidationError("You must be logged in to create a conversation.")
         return data
+
 
