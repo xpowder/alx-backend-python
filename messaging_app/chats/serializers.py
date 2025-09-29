@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 from .models import User, Conversation, Message
 
 
@@ -34,8 +35,6 @@ class ConversationSerializer(serializers.ModelSerializer):
         return MessageSerializer(messages, many=True).data
 
     def validate(self, data):
-        if not self.context['request'].user.is_authenticated:
-            from rest_framework.exceptions import ValidationError
             raise ValidationError("You must be logged in to create a conversation.")
         return data
 
