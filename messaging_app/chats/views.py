@@ -20,6 +20,11 @@ class ConversationViewSet(viewsets.ModelViewSet):
             'participants', 'messages__sender'
         )
 
+    def get_object(self):
+        obj = super().get_object()
+        self.check_object_permissions(self.request, obj)
+        return obj
+
     def perform_create(self, serializer):
         conversation = serializer.save()
         conversation.participants.add(self.request.user)
@@ -38,17 +43,20 @@ class MessageViewSet(viewsets.ModelViewSet):
         conversation = get_object_or_404(Conversation, pk=conversation_id)
 
         if self.request.user not in conversation.participants.all():
-            from rest_framework import status
             raise PermissionDenied(detail="You are not a participant of this conversation.")
 
         return Message.objects.filter(conversation=conversation).select_related('sender')
+
+    def get_object(self):
+        obj = super().get_object()
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     def perform_create(self, serializer):
         conversation_id = self.kwargs.get('conversation_pk')
         conversation = get_object_or_404(Conversation, pk=conversation_id)
 
         if self.request.user not in conversation.participants.all():
-            from rest_framework import status
             raise PermissionDenied(detail="You are not a participant of this conversation.")
 
         serializer.save(sender=self.request.user, conversation=conversation)
