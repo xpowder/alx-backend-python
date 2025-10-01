@@ -1,3 +1,6 @@
+#messaging_app/chats/views.py
+from django.http import response
+from rest_framework.response import Response
 from rest_framework import viewsets, permissions, filters, status
 from rest_framework.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
@@ -43,7 +46,10 @@ class MessageViewSet(viewsets.ModelViewSet):
         conversation = get_object_or_404(Conversation, pk=conversation_id)
 
         if self.request.user not in conversation.participants.all():
-            raise PermissionDenied(detail="You are not a participant of this conversation.")
+            raise Response(
+                {"detail": "You are not a participant of this conversation."},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         return Message.objects.filter(conversation=conversation).select_related('sender')
 
@@ -57,6 +63,9 @@ class MessageViewSet(viewsets.ModelViewSet):
         conversation = get_object_or_404(Conversation, pk=conversation_id)
 
         if self.request.user not in conversation.participants.all():
-            raise PermissionDenied(detail="You are not a participant of this conversation.")
+           return Response(
+                {"detail": "You are not a participant of this conversation."},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
         serializer.save(sender=self.request.user, conversation=conversation)

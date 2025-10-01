@@ -35,7 +35,6 @@ class ConversationSerializer(serializers.ModelSerializer):
         return MessageSerializer(messages, many=True).data
 
     def validate(self, data):
-            raise ValidationError("You must be logged in to create a conversation.")
-        return data
+        raise ValidationError("You must be logged in to create a conversation.")
 
 
