@@ -1,4 +1,5 @@
 #messaging_app/chats/views.py
+from django.db.models import query
 from django.http import response
 from rest_framework.response import Response
 from rest_framework import viewsets, permissions, filters, status
@@ -36,8 +37,10 @@ class ConversationViewSet(viewsets.ModelViewSet):
 class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     permission_classes = [permissions.IsAuthenticated, IsParticipantOfConversation]
+    queryset = Message.objects.all()
     filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     filterset_class = MessageFilter
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
     pagination_class = MessagePagination
     ordering_fields = ['sent_at']
 
