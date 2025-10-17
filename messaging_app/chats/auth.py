@@ -1,12 +1,14 @@
-# messaging_app/chats/auth.py
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from rest_framework import generics, permissions
+from django.contrib.auth import get_user_model
+from .serializers import UserSerializer
 
-from django.urls import path
+User = get_user_model()
 
-urlpatterns = [
-    path("login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-]
+class RegisterView(generics.CreateAPIView):
+    """
+    API view for registering a new user.
+    This endpoint is open to anyone.
+    """
+    queryset = User.objects.all()
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = UserSerializer
