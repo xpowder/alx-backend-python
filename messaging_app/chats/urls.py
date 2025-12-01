@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework_nested import routers
-from .views import ConversationViewSet, MessageViewSet
+from .views import ConversationViewSet, MessageViewSet, conversation_messages_list
 
 # The main router for the top-level resource (Conversations)
 router = routers.DefaultRouter()
@@ -16,4 +16,6 @@ conversations_router.register(r'messages', MessageViewSet, basename='conversatio
 urlpatterns = [
     path('', include(router.urls)),
     path('', include(conversations_router.urls)),
+    # Task 5: Cached view for listing messages in a conversation
+    path('conversations/<uuid:conversation_id>/messages/cached/', conversation_messages_list, name='cached-conversation-messages'),
 ]

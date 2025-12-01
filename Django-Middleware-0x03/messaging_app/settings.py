@@ -30,6 +30,14 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # Custom middleware - Task 1: Request Logging
+    'chats.middleware.RequestLoggingMiddleware',
+    # Custom middleware - Task 2: Restrict Access by Time
+    'chats.middleware.RestrictAccessByTimeMiddleware',
+    # Custom middleware - Task 3: Rate Limiting (Offensive Language)
+    'chats.middleware.OffensiveLanguageMiddleware',
+    # Custom middleware - Task 4: Role Permission
+    'chats.middleware.RolePermissionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
