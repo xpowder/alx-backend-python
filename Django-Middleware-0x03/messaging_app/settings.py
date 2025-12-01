@@ -37,7 +37,7 @@ MIDDLEWARE = [
     # Custom middleware - Task 3: Rate Limiting (Offensive Language)
     'chats.middleware.OffensiveLanguageMiddleware',
     # Custom middleware - Task 4: Role Permission
-    'chats.middleware.RolePermissionMiddleware',
+    'chats.middleware.RolepermissionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
